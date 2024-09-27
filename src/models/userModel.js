@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -31,6 +31,6 @@ const userSchema = new mongoose.Schema({
 
 // In nextjs we have to check if model users is already exists or not, if it exists it will use the ref else it will create the schema, in nodejs we dont' have to do this.
 
-const User = mongoose.models.users || mongoose.model('users', userScheme);
+const User = mongoose.models.users || mongoose.model('users', userSchema);
 
 export default User
