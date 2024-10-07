@@ -1,9 +1,60 @@
-import React from 'react'
+"use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-const page = () => {
+import React, { useState } from "react";
+import axios from "axios";
+import Link from "next/link";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
+const ProfilePage = () => {
+  const router = useRouter();
+  const [data, setData] = useState("nothing");
+
+  const getUserDetails = async () => {
+    const response = await axios.post("/api/users/me");
+    console.log(response);
+    setData(response.data.data._id);
+  };
+
+  const logout = async () => {
+    try {
+      await axios.get("/api/users/logout");
+      toast.success("logout success");
+      router.push("/login");
+    } catch (error: any) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
+
   return (
-    <div>Profile Page</div>
-  )
-}
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+      <hr />
+      <p>Profile page</p>
+      <h2 className="p-1 rounded bg-green-500">
+        {data === "nothing" ? (
+          "Nothing"
+        ) : (
+          <Link href={`/profile/${data}`}>{data}</Link>
+        )}
+      </h2>
+      <hr />
+      <button
+        onClick={logout}
+        className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Logout
+      </button>
 
-export default page
+      <button
+        onClick={getUserDetails}
+        className="bg-green-800 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        GetUser Details
+      </button>
+    </div>
+  );
+};
+
+export default ProfilePage;
